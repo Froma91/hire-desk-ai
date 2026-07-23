@@ -1,0 +1,19 @@
+{
+  "pbtResults": {},
+  "executionHistory": {
+    "1.1 Create backend directory layout": [
+      {
+        "executionId": "2b7d517b-63ef-47f6-a166-16ed1eafcc85",
+        "chatSessionId": "sess_a693d7b6-0641-4200-a993-e1b1a3c85eaa",
+        "timestamp": 1784834758605
+      }
+    ],
+    "1.2 Create frontend scaffold with Vite + Vue 3 + TypeScript": [
+      {
+        "executionId": "2b7d517b-63ef-47f6-a166-16ed1eafcc85",
+        "chatSessionId": "sess_a693d7b6-0641-4200-a993-e1b1a3c85eaa",
+        "timestamp": 1784834759410
+      }
+    ]
+  }
+}
