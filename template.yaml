@@ -1,0 +1,190 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+
+Description: >
+  PROJECT_HIRE_DESK_AI — Hire Desk AI MVP
+  Serverless backend: two Lambda functions, one DynamoDB table, one HTTP API.
+
+# ---------------------------------------------------------------------------
+# Parameters
+# ---------------------------------------------------------------------------
+Parameters:
+  BedrockModelId:
+    Type: String
+    Default: anthropic.claude-3-haiku-20240307-v1:0
+    Description: Amazon Bedrock foundation model ID used by JobAnalysisFunction.
+
+  LogLevel:
+    Type: String
+    Default: INFO
+    AllowedValues: [DEBUG, INFO, WARNING, ERROR, CRITICAL]
+    Description: Python logging level for both Lambda functions.
+
+# ---------------------------------------------------------------------------
+# Globals — applied to every AWS::Serverless::Function resource
+# ---------------------------------------------------------------------------
+Globals:
+  Function:
+    Runtime: python3.13
+    MemorySize: 512
+    Architectures:
+      - x86_64
+    Environment:
+      Variables:
+        LOG_LEVEL: !Ref LogLevel
+
+# ---------------------------------------------------------------------------
+# Resources
+# ---------------------------------------------------------------------------
+Resources:
+
+  # -------------------------------------------------------------------------
+  # DynamoDB table
+  # -------------------------------------------------------------------------
+  ApplicationsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Sub '${AWS::StackName}-ApplicationsTable'
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: userId
+          AttributeType: S
+        - AttributeName: applicationId
+          AttributeType: S
+      KeySchema:
+        - AttributeName: userId
+          KeyType: HASH
+        - AttributeName: applicationId
+          KeyType: RANGE
+
+  # -------------------------------------------------------------------------
+  # HTTP API (API Gateway v2)
+  # -------------------------------------------------------------------------
+  HttpApi:
+    Type: AWS::Serverless::HttpApi
+    Properties:
+      StageName: $default
+
+  # -------------------------------------------------------------------------
+  # ApplicationsFunction
+  # Handles: CRUD, status updates, stats, recommendation read
+  # -------------------------------------------------------------------------
+  ApplicationsFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub '${AWS::StackName}-ApplicationsFunction'
+      CodeUri: backend/applications_function/
+      Handler: app.handler
+      Timeout: 30
+      Environment:
+        Variables:
+          TABLE_NAME: !Ref ApplicationsTable
+      Policies:
+        - Version: '2012-10-17'
+          Statement:
+            - Sid: DynamoDBCRUD
+              Effect: Allow
+              Action:
+                - dynamodb:PutItem
+                - dynamodb:GetItem
+                - dynamodb:UpdateItem
+                - dynamodb:DeleteItem
+                - dynamodb:Query
+              Resource:
+                - !GetAtt ApplicationsTable.Arn
+      Events:
+        PostApplications:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref HttpApi
+            Method: POST
+            Path: /applications
+        GetApplications:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref HttpApi
+            Method: GET
+            Path: /applications
+        GetApplication:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref HttpApi
+            Method: GET
+            Path: /applications/{id}
+        PatchApplication:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref HttpApi
+            Method: PATCH
+            Path: /applications/{id}
+        DeleteApplication:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref HttpApi
+            Method: DELETE
+            Path: /applications/{id}
+        PatchApplicationStatus:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref HttpApi
+            Method: PATCH
+            Path: /applications/{id}/status
+        GetStats:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref HttpApi
+            Method: GET
+            Path: /stats
+        GetRecommendation:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref HttpApi
+            Method: GET
+            Path: /applications/{id}/recommendation
+
+  # -------------------------------------------------------------------------
+  # JobAnalysisFunction
+  # Handles: /analyze (Bedrock job-description analysis)
+  # -------------------------------------------------------------------------
+  JobAnalysisFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub '${AWS::StackName}-JobAnalysisFunction'
+      CodeUri: backend/job_analysis_function/
+      Handler: app.handler
+      Timeout: 60
+      Environment:
+        Variables:
+          TABLE_NAME: !Ref ApplicationsTable
+          BEDROCK_MODEL_ID: !Ref BedrockModelId
+      Policies:
+        - Version: '2012-10-17'
+          Statement:
+            - Sid: BedrockInvokeModel
+              Effect: Allow
+              Action:
+                - bedrock:InvokeModel
+              Resource:
+                - !Sub 'arn:aws:bedrock:*::foundation-model/anthropic.claude-3-haiku-20240307-v1:0'
+            - Sid: DynamoDBReadOnly
+              Effect: Allow
+              Action:
+                - dynamodb:GetItem
+                - dynamodb:Query
+              Resource:
+                - !GetAtt ApplicationsTable.Arn
+      Events:
+        PostAnalyze:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref HttpApi
+            Method: POST
+            Path: /analyze
+
+# ---------------------------------------------------------------------------
+# Outputs
+# ---------------------------------------------------------------------------
+Outputs:
+  ApiUrl:
+    Description: HTTP API endpoint URL
+    Value: !Sub 'https://${HttpApi}.execute-api.${AWS::Region}.amazonaws.com'
