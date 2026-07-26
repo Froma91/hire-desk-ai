@@ -174,7 +174,7 @@ All AWS calls stay in Lambda (never in the browser). `userId` is always
     - On confirm call `applicationsStore.create()`; on success redirect to `/board`; on 4xx show inline error preserving form
     - _Requirements: 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 2.4, 2.5_
 
-  - [ ]* 6.5 Write unit tests for JobDescriptionForm and ExtractionReviewForm
+  - [ ] 6.5 Write unit tests for JobDescriptionForm and ExtractionReviewForm
     - File: `frontend/src/__tests__/JobDescriptionForm.spec.ts`
     - Verify Analyze button disabled when textarea empty; verify input of > 10 000 chars does not call API (Property 1)
     - File: `frontend/src/__tests__/ExtractionReviewForm.spec.ts`

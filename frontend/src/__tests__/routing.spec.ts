@@ -62,7 +62,8 @@ describe('Router', () => {
     })
     await flushPromises()
 
-    expect(wrapper.text()).toContain('New Application View')
+    expect(wrapper.text()).toContain('Paste the job description')
+    expect(wrapper.find('textarea').exists()).toBe(true)
   })
 
   it('redirects unknown routes to /board', async () => {
