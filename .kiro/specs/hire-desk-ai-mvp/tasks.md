@@ -92,7 +92,7 @@ All AWS calls stay in Lambda (never in the browser). `userId` is always
     - Include a catch-all that returns 404 for unrecognised routes
     - _Requirements: 9.1_
 
-  - [ ]* 4.4 Write unit tests for CRUD handlers
+  - [ ] 4.4 Write unit tests for CRUD handlers
     - File: `backend/tests/unit/test_applications_handlers.py`
     - Mock `ApplicationsRepo` with `unittest.mock`
     - Cover: happy-path create (201 + UUID in response), list (200 ordered), get (200), update partial fields only (Property 6: partial update preserves unmodified fields — **Validates: Requirements 3.5**), delete (204), not-found (404), validation error (400)
