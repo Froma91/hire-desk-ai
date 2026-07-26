@@ -32,7 +32,7 @@ describe('Router', () => {
     })
     await flushPromises()
 
-    expect(wrapper.text()).toContain('Board View')
+    expect(wrapper.text()).toContain('Application Board')
   })
 
   it('renders DashboardView at /dashboard', async () => {
@@ -79,7 +79,7 @@ describe('Router', () => {
     await flushPromises()
 
     expect(router.currentRoute.value.path).toBe('/board')
-    expect(wrapper.text()).toContain('Board View')
+    expect(wrapper.text()).toContain('Application Board')
   })
 
   it('redirects root / to /board', async () => {

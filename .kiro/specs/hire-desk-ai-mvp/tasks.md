@@ -205,7 +205,7 @@ All AWS calls stay in Lambda (never in the browser). `userId` is always
     - Return full updated `Application` record (200)
     - _Requirements: 4.4, 4.6, 4.7, 6.9_
 
-  - [ ]* 7.5 Write unit tests for status handler and Kanban board
+  - [ ] 7.5 Write unit tests for status handler and Kanban board
     - File: `backend/tests/unit/test_status_handler.py`
     - Cover: valid status update returns 200 + updated `nextAction`, invalid status returns 400 without DDB call (Property 9), `nextAction` recomputed after status change (Property 11 recompute)
     - File: `frontend/src/__tests__/KanbanBoard.spec.ts`
