@@ -227,7 +227,7 @@ All AWS calls stay in Lambda (never in the browser). `userId` is always
     - On `RepositoryError` return 503
     - _Requirements: 5.4, 5.5_
 
-  - [ ]* 8.3 Write property test for `compute_stats`
+  - [ ] 8.3 Write property test for `compute_stats`
     - **Property 10: Dashboard stats are consistent with application records**
     - **Validates: Requirements 5.1, 5.2, 5.3**
     - File: `backend/tests/unit/test_compute_stats.py`
