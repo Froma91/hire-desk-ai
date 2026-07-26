@@ -3,6 +3,10 @@
     "8.3 Write property test for `compute_stats`": {
       "status": "passed",
       "lastRunTimestamp": 1785091204378
+    },
+    "9.2 Write Hypothesis property test for `compute_next_action`": {
+      "status": "passed",
+      "lastRunTimestamp": 1785098547169
     }
   },
   "executionHistory": {
