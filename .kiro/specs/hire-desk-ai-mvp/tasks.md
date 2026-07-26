@@ -258,7 +258,7 @@ All AWS calls stay in Lambda (never in the browser). `userId` is always
     - No I/O, no Bedrock calls, no side effects; `explanation` is always `None` here
     - _Requirements: 6.1, 6.2, 6.3, 6.4, 6.5, 6.6, 6.9, 6.10, 6.11_
 
-  - [ ]* 9.2 Write Hypothesis property test for `compute_next_action`
+  - [ ] 9.2 Write Hypothesis property test for `compute_next_action`
     - **Property 11: Next-action engine is deterministic and status-driven**
     - **Validates: Requirements 6.1–6.6, 6.9–6.11**
     - File: `backend/tests/unit/test_next_action_engine.py`

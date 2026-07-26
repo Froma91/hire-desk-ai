@@ -1,13 +1,26 @@
 """
-Deterministic next-action computation (business rules layer).
+Backward-compatibility adapter for the next-action engine.
 
-This module computes the recommended next action based on the current
-application status. The rules are deterministic and do not depend on AI.
+The status handler (handlers/status.py) imports `compute_next_action` from
+this module with the call signature:
 
-Full implementation with date-based logic is in task 9.1.
-This file provides the minimum compatible integration boundary.
+    compute_next_action(status: Status, application: Application)
+
+This adapter bridges that call to the canonical engine in
+`next_action_engine.py` which uses the spec-defined signature:
+
+    compute_next_action(app: Application, now: datetime)
+
+The adapter patches `app.status` to the provided `status` value before
+delegating to the engine, because the handler calls this function with the
+NEW status while the Application object still carries the OLD status.
+
+This file will be removed or inlined once the status handler is updated
+to call the engine directly.
 """
 
+from dataclasses import replace
+from datetime import datetime, timezone
 from typing import Optional
 
 from applications_function.models import (
@@ -16,19 +29,9 @@ from applications_function.models import (
     Priority,
     Status,
 )
-
-
-# ---------------------------------------------------------------------------
-# Simple status-based rules (no date logic yet — added in task 9.1)
-# ---------------------------------------------------------------------------
-
-_STATUS_RULES: dict[Status, tuple[str, Priority]] = {
-    Status.WISHLIST: ("Review job description and prepare application", Priority.MEDIUM),
-    Status.APPLIED: ("Follow up if no response within a week", Priority.MEDIUM),
-    Status.INTERVIEW: ("Prepare for the interview", Priority.HIGH),
-    Status.OFFER: ("Review the offer and respond", Priority.HIGH),
-    Status.REJECTED: ("Archive and continue applying elsewhere", Priority.LOW),
-}
+from applications_function.business_rules.next_action_engine import (
+    compute_next_action as engine_compute_next_action,
+)
 
 
 def compute_next_action(
@@ -36,24 +39,20 @@ def compute_next_action(
     application: Application,
 ) -> Optional[NextAction]:
     """
-    Compute the deterministic next action for an application given its status.
+    Compatibility adapter: translates (status, application) → (app, now).
+
+    The handler passes the NEW status as the first argument while the
+    Application object still has the OLD status set. We create a shallow
+    copy with the updated status so the engine can read `app.status`
+    correctly.
 
     Args:
-        status: The new/current status of the application.
-        application: The full application object (for future date-based rules).
+        status: The new status that should be evaluated.
+        application: The Application object (not mutated).
 
     Returns:
-        A NextAction with label and priority, or None if no action is applicable.
-
-    Note:
-        This is a minimal implementation. Task 9.1 will add:
-        - Date-based delay calculations
-        - Priority adjustments based on time since last status change
-        - More granular action labels
+        A NextAction with label and priority, or None.
     """
-    rule = _STATUS_RULES.get(status)
-    if rule is None:
-        return None
-
-    label, priority = rule
-    return NextAction(label=label, priority=priority, explanation=None)
+    now = datetime.now(timezone.utc)
+    patched_app = replace(application, status=status)
+    return engine_compute_next_action(patched_app, now)
