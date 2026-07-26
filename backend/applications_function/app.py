@@ -11,6 +11,7 @@ from applications_function.handlers.applications import (
     update_application,
     delete_application,
 )
+from applications_function.handlers.status import update_status
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
@@ -41,7 +42,7 @@ _ROUTES: dict[str, callable] = {
     "GET /applications/{id}": get_application,
     "PATCH /applications/{id}": update_application,
     "DELETE /applications/{id}": delete_application,
-    "PATCH /applications/{id}/status": _not_implemented,
+    "PATCH /applications/{id}/status": update_status,
     "GET /stats": _not_implemented,
     "GET /applications/{id}/recommendation": _not_implemented,
 }
