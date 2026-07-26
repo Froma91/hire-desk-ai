@@ -137,7 +137,7 @@ All AWS calls stay in Lambda (never in the browser). `userId` is always
     - Include in `App.vue`
     - _Requirements: 4.5, 8.5_
 
-  - [ ]* 5.6 Write routing unit tests
+  - [ ] 5.6 Write routing unit tests
     - File: `frontend/src/__tests__/routing.spec.ts`
     - Verify unknown route redirects to `/board`
     - Verify each named route renders the correct component
