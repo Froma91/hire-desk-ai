@@ -47,7 +47,7 @@ describe('Router', () => {
     })
     await flushPromises()
 
-    expect(wrapper.text()).toContain('Dashboard View')
+    expect(wrapper.find('h1').text()).toBe('Dashboard')
   })
 
   it('renders NewApplicationView at /new', async () => {
