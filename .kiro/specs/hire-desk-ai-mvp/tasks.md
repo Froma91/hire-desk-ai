@@ -246,7 +246,7 @@ All AWS calls stay in Lambda (never in the browser). `userId` is always
     - On error display error message and hide stats
     - _Requirements: 5.4, 5.5_
 
-  - [ ]* 8.6 Write unit tests for DashboardView
+  - [ ] 8.6 Write unit tests for DashboardView
     - File: `frontend/src/__tests__/DashboardView.spec.ts`
     - Verify stats are displayed correctly; verify error banner shown when `/stats` fails without stale data
     - _Requirements: 5.1–5.5_
