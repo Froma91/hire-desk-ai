@@ -23,6 +23,13 @@
         "chatSessionId": "sess_a693d7b6-0641-4200-a993-e1b1a3c85eaa",
         "timestamp": 1784834759410
       }
+    ],
+    "11.2 Verify Bedrock timeout and error paths in `bedrock_service.py`": [
+      {
+        "executionId": "68b3e7af-eb24-4a67-8b49-e9cc2a6c74e8",
+        "chatSessionId": "sess_a693d7b6-0641-4200-a993-e1b1a3c85eaa",
+        "timestamp": 1785171514906
+      }
     ]
   }
 }

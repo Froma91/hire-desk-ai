@@ -211,3 +211,16 @@ def test_no_internal_details_in_error_responses(mock_analyze):
             assert pattern not in body_str, (
                 f"Found '{pattern}' in error response for {type(error).__name__}"
             )
+
+
+@patch.object(analysis_mod, "analyze_job_description")
+def test_timeout_response_does_not_leak_job_description(mock_analyze):
+    """On timeout, assert the job description text is never echoed in the safe error envelope."""
+    marker_jd = "SECRET_JD_MARKER_abc123 confidential role details"
+    mock_analyze.side_effect = BedrockTimeoutError("timeout")
+    event = _make_analyze_event(body={"jobDescription": marker_jd})
+
+    response = analyze_job(event, None)
+
+    assert response["statusCode"] == 408
+    assert "SECRET_JD_MARKER_abc123" not in response["body"]

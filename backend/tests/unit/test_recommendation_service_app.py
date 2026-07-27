@@ -131,6 +131,40 @@ def test_empty_explanation_returns_none(mock_get_client):
 
 
 @patch.object(explanation_mod, "_get_client")
+def test_malformed_content_returns_none(mock_get_client):
+    """Mock returns a response body WITHOUT a 'content' key, assert returns None."""
+    mock_client = MagicMock()
+    mock_get_client.return_value = mock_client
+
+    response_body = json.dumps({"foo": "bar"}).encode("utf-8")
+    mock_client.invoke_model.return_value = {
+        "body": io.BytesIO(response_body),
+        "ResponseMetadata": {"RequestId": "test-req-id"},
+    }
+
+    result = generate_explanation("Apply now", "Wishlist")
+    assert result is None
+
+
+@patch.object(explanation_mod, "_get_client")
+def test_empty_string_explanation_returns_none(mock_get_client):
+    """Mock returns an empty-string text block, assert returns None."""
+    mock_client = MagicMock()
+    mock_get_client.return_value = mock_client
+
+    response_body = json.dumps({
+        "content": [{"type": "text", "text": ""}]
+    }).encode("utf-8")
+    mock_client.invoke_model.return_value = {
+        "body": io.BytesIO(response_body),
+        "ResponseMetadata": {"RequestId": "test-req-id"},
+    }
+
+    result = generate_explanation("Apply now", "Wishlist")
+    assert result is None
+
+
+@patch.object(explanation_mod, "_get_client")
 def test_timeout_returns_none(mock_get_client):
     """Mock raises ReadTimeoutError(endpoint_url='x'), assert returns None."""
     from botocore.exceptions import ReadTimeoutError

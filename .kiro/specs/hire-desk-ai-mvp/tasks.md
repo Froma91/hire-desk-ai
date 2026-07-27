@@ -328,7 +328,7 @@ All AWS calls stay in Lambda (never in the browser). `userId` is always
     - No new code required if already wired in task 6.4 — verify and add any missing conditional rendering
     - _Requirements: 1.5, 1.6, 1.8, 6.8_
 
-  - [ ] 11.2 Verify Bedrock timeout and error paths in `bedrock_service.py`
+  - [x] 11.2 Verify Bedrock timeout and error paths in `bedrock_service.py`
     - Confirm `BedrockTimeoutError` maps correctly to 408 in the analysis handler
     - Confirm `ExtractionValidationError` maps to 422
     - Confirm `explanation = null` when Bedrock is unavailable for recommendations
