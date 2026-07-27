@@ -376,7 +376,7 @@ All AWS calls stay in Lambda (never in the browser). `userId` is always
     - _Requirements: 9.3, 9.6_
 
 - [ ] 14. Demo preparation [OPTIONAL]
-  - [ ] 14.1 Create demo seed script
+  - [x] 14.1 Create demo seed script
     - Write `scripts/seed_demo_data.py` that calls `POST /applications` with 5–8 sample applications covering all five statuses
     - Script reads API base URL from `API_BASE_URL` environment variable
     - _Requirements: None (demo aid only)_
