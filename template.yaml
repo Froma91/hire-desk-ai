@@ -79,6 +79,7 @@ Resources:
       Environment:
         Variables:
           TABLE_NAME: !Ref ApplicationsTable
+          BEDROCK_MODEL_ID: !Ref BedrockModelId
       Policies:
         - Version: '2012-10-17'
           Statement:
@@ -92,6 +93,12 @@ Resources:
                 - dynamodb:Query
               Resource:
                 - !GetAtt ApplicationsTable.Arn
+            - Sid: BedrockInvokeModel
+              Effect: Allow
+              Action:
+                - bedrock:InvokeModel
+              Resource:
+                - !Sub 'arn:aws:bedrock:*::foundation-model/anthropic.claude-3-haiku-20240307-v1:0'
       Events:
         PostApplications:
           Type: HttpApi

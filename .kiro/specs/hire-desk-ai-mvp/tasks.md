@@ -308,7 +308,7 @@ All AWS calls stay in Lambda (never in the browser). `userId` is always
     - (Property 12 — **Validates: Requirements 6.7, 6.8**)
     - _Requirements: 6.7, 6.8_
 
-  - [ ]* 10.6 Write unit tests for analysis handler and Bedrock service
+  - [ ] 10.6 Write unit tests for analysis handler and Bedrock service
     - File: `backend/tests/unit/test_analysis_handler.py`
     - Mock `bedrock_service` with `unittest.mock`
     - Cover: Bedrock succeeds → 200 `ExtractionResult`; timeout → 408; schema mismatch → 422; Bedrock error → 502

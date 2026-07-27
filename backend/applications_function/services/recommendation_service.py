@@ -1,10 +1,16 @@
 """
-Recommendation service — retrieves an application and computes its next action.
+Recommendation service — retrieves an application and computes its next action
+with optional Bedrock explanation enrichment.
 
-This service sits between the handler and the repository/engine layers.
-It does NOT call Bedrock — the explanation field is always None at this stage.
+This service:
+  - Retrieves the application via ApplicationsRepo
+  - Calls compute_next_action(app, now) for deterministic recommendation
+  - If a NextAction exists, attempts to enrich it with a Bedrock explanation
+  - On Bedrock failure, returns the deterministic recommendation with explanation=None
+  - RepositoryError and NotFoundError propagate normally (never hidden)
+  - NEVER logs full Application, job-description content, or Bedrock response text
 
-Testable by mocking the repository and current time.
+Testable by mocking the repository, current time, and explanation_service.
 """
 
 from datetime import datetime, timezone
@@ -17,11 +23,13 @@ from applications_function.repositories.applications_repo import (
 )
 from applications_function.business_rules.next_action_engine import compute_next_action
 from applications_function.services.applications_service import _repo
+from applications_function.services.explanation_service import generate_explanation
 
 
 def get_recommendation(application_id: str) -> tuple[Application, Optional[NextAction]]:
     """
-    Retrieve an application and compute its deterministic next action.
+    Retrieve an application, compute its deterministic next action, and
+    optionally enrich it with a Bedrock-generated explanation.
 
     Args:
         application_id: The application's UUID.
@@ -29,7 +37,9 @@ def get_recommendation(application_id: str) -> tuple[Application, Optional[NextA
     Returns:
         A tuple of (Application, NextAction | None).
         The Application is never mutated.
-        explanation is always None (no Bedrock at this stage).
+        If a NextAction exists:
+          - explanation is a ≤ 280 char string when Bedrock succeeds
+          - explanation is None when Bedrock fails or returns invalid content
 
     Raises:
         NotFoundError: if the application does not exist.
@@ -42,5 +52,22 @@ def get_recommendation(application_id: str) -> tuple[Application, Optional[NextA
     now = datetime.now(timezone.utc)
     next_action = compute_next_action(app, now)
 
-    # 3. Return without mutating the application
-    return app, next_action
+    # 3. If no action, return immediately (no Bedrock call)
+    if next_action is None:
+        return app, None
+
+    # 4. Attempt Bedrock explanation enrichment (graceful degradation)
+    explanation = generate_explanation(
+        label=next_action.label,
+        status=app.status.value,
+    )
+
+    # 5. Attach explanation (may be None if Bedrock failed)
+    #    Create a new NextAction to avoid mutating the engine's output
+    enriched_action = NextAction(
+        label=next_action.label,
+        priority=next_action.priority,
+        explanation=explanation,
+    )
+
+    return app, enriched_action
