@@ -4,16 +4,16 @@ import json
 import logging
 import re
 
-from applications_function.handlers.applications import (
+from handlers.applications import (
     create_application,
     list_applications,
     get_application,
     update_application,
     delete_application,
 )
-from applications_function.handlers.status import update_status
-from applications_function.handlers.stats import get_stats
-from applications_function.handlers.recommendation import get_recommendation_handler
+from handlers.status import update_status
+from handlers.stats import get_stats
+from handlers.recommendation import get_recommendation_handler
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)

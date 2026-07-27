@@ -23,13 +23,13 @@ from dataclasses import replace
 from datetime import datetime, timezone
 from typing import Optional
 
-from applications_function.models import (
+from models import (
     Application,
     NextAction,
     Priority,
     Status,
 )
-from applications_function.business_rules.next_action_engine import (
+from business_rules.next_action_engine import (
     compute_next_action as engine_compute_next_action,
 )
 

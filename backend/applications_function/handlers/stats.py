@@ -14,12 +14,12 @@ import logging
 from datetime import datetime, timezone
 from typing import Optional
 
-from applications_function.models import DashboardStats
-from applications_function.services.applications_service import (
+from models import DashboardStats
+from services.applications_service import (
     _repo,
     RepositoryError,
 )
-from applications_function.services.stats_service import compute_stats
+from services.stats_service import compute_stats
 
 logger = logging.getLogger(__name__)
 

@@ -12,7 +12,20 @@ Requirements: 3.1–3.10
 import sys
 import os
 
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", ".."))
+# ---------------------------------------------------------------------------
+# Lambda-root isolation bootstrap (ApplicationsFunction / flat layout).
+# Purge any flat top-level modules left by another Lambda's test module, then
+# put THIS Lambda's root first on sys.path so bare imports resolve correctly.
+# ---------------------------------------------------------------------------
+_BACKEND = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+_LAMBDA_ROOT = os.path.join(_BACKEND, "applications_function")
+_FLAT = {"app", "models", "handlers", "services", "validators", "repositories", "business_rules"}
+for _n in list(sys.modules):
+    if _n.split(".")[0] in _FLAT:
+        del sys.modules[_n]
+if _LAMBDA_ROOT in sys.path:
+    sys.path.remove(_LAMBDA_ROOT)
+sys.path.insert(0, _LAMBDA_ROOT)
 
 import json
 import uuid
@@ -20,14 +33,14 @@ import pytest
 from unittest.mock import MagicMock
 from datetime import datetime, timezone, timedelta
 
-import applications_function.services.applications_service as svc_module
-from applications_function.repositories.applications_repo import (
+import services.applications_service as svc_module
+from repositories.applications_repo import (
     ApplicationsRepo,
     NotFoundError,
     RepositoryError,
 )
-from applications_function.models import Application, Status, StatusEntry
-from applications_function.handlers.applications import (
+from models import Application, Status, StatusEntry
+from handlers.applications import (
     create_application,
     list_applications,
     get_application,

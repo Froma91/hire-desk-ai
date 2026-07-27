@@ -14,9 +14,9 @@ import json
 import logging
 from typing import Optional
 
-from applications_function.models import NextAction
-from applications_function.services.recommendation_service import get_recommendation
-from applications_function.repositories.applications_repo import (
+from models import NextAction
+from services.recommendation_service import get_recommendation
+from repositories.applications_repo import (
     NotFoundError,
     RepositoryError,
 )

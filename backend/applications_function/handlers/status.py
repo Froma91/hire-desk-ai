@@ -17,15 +17,15 @@ import logging
 from datetime import datetime, timezone
 from typing import Optional
 
-from applications_function.models import Application, Status, StatusEntry
-from applications_function.services.applications_service import (
+from models import Application, Status, StatusEntry
+from services.applications_service import (
     get_application as svc_get_application,
     ValidationError,
     NotFoundError,
     RepositoryError,
     _repo,
 )
-from applications_function.business_rules.next_action import compute_next_action
+from business_rules.next_action import compute_next_action
 
 logger = logging.getLogger(__name__)
 

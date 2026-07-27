@@ -16,13 +16,13 @@ import uuid
 from datetime import datetime, timezone
 from typing import Optional
 
-from applications_function.models import Application, Status, StatusEntry
-from applications_function.repositories.applications_repo import (
+from models import Application, Status, StatusEntry
+from repositories.applications_repo import (
     ApplicationsRepo,
     NotFoundError,    # re-exported for handler convenience
     RepositoryError,  # re-exported for handler convenience
 )
-from applications_function.validators.payload_validator import (
+from validators.payload_validator import (
     validate_application_payload,
 )
 

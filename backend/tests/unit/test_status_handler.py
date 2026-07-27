@@ -8,26 +8,38 @@ the handler from DynamoDB and external dependencies.
 import sys
 import os
 
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", ".."))
+# ---------------------------------------------------------------------------
+# Lambda-root isolation bootstrap (ApplicationsFunction / flat layout).
+# ---------------------------------------------------------------------------
+_BACKEND = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+_LAMBDA_ROOT = os.path.join(_BACKEND, "applications_function")
+_FLAT = {"app", "models", "handlers", "services", "validators", "repositories", "business_rules"}
+for _n in list(sys.modules):
+    if _n.split(".")[0] in _FLAT:
+        del sys.modules[_n]
+if _LAMBDA_ROOT in sys.path:
+    sys.path.remove(_LAMBDA_ROOT)
+sys.path.insert(0, _LAMBDA_ROOT)
 
 import json
 import pytest
 from unittest.mock import MagicMock, patch
 from datetime import datetime, timezone
 
-from applications_function.models import (
+from models import (
     Application,
     Status,
     StatusEntry,
     NextAction,
     Priority,
 )
-from applications_function.repositories.applications_repo import (
+from repositories.applications_repo import (
     ApplicationsRepo,
     NotFoundError,
     RepositoryError,
 )
-from applications_function.handlers.status import update_status
+import handlers.status as status_mod
+from handlers.status import update_status
 
 
 # ---------------------------------------------------------------------------
@@ -66,9 +78,9 @@ def _make_event(application_id="test-uuid-1234", status_value="Applied"):
 # ---------------------------------------------------------------------------
 
 
-@patch("applications_function.handlers.status.compute_next_action")
-@patch("applications_function.handlers.status._repo")
-@patch("applications_function.handlers.status.svc_get_application")
+@patch.object(status_mod, "compute_next_action")
+@patch.object(status_mod, "_repo")
+@patch.object(status_mod, "svc_get_application")
 class TestValidStatusUpdate:
     def test_valid_status_update_returns_200(
         self, mock_get_app, mock_repo, mock_compute
@@ -110,9 +122,9 @@ class TestInvalidStatus:
         assert error["code"] == "VALIDATION_ERROR"
         assert error["field"] == "status"
 
-    @patch("applications_function.handlers.status.compute_next_action")
-    @patch("applications_function.handlers.status._repo")
-    @patch("applications_function.handlers.status.svc_get_application")
+    @patch.object(status_mod, "compute_next_action")
+    @patch.object(status_mod, "_repo")
+    @patch.object(status_mod, "svc_get_application")
     def test_invalid_status_no_repo_call(
         self, mock_get_app, mock_repo, mock_compute
     ):
@@ -126,9 +138,9 @@ class TestInvalidStatus:
         assert mock_repo_instance.update.call_count == 0
 
 
-@patch("applications_function.handlers.status.compute_next_action")
-@patch("applications_function.handlers.status._repo")
-@patch("applications_function.handlers.status.svc_get_application")
+@patch.object(status_mod, "compute_next_action")
+@patch.object(status_mod, "_repo")
+@patch.object(status_mod, "svc_get_application")
 class TestNextActionRecomputed:
     def test_next_action_recomputed_after_status_change(
         self, mock_get_app, mock_repo, mock_compute
@@ -157,9 +169,9 @@ class TestNextActionRecomputed:
         assert body["nextAction"]["priority"] == "Medium"
 
 
-@patch("applications_function.handlers.status.compute_next_action")
-@patch("applications_function.handlers.status._repo")
-@patch("applications_function.handlers.status.svc_get_application")
+@patch.object(status_mod, "compute_next_action")
+@patch.object(status_mod, "_repo")
+@patch.object(status_mod, "svc_get_application")
 class TestErrorHandling:
     def test_not_found_error_returns_404(
         self, mock_get_app, mock_repo, mock_compute
@@ -244,3 +256,4 @@ class TestMissingFields:
         assert response["statusCode"] == 400
         error = json.loads(response["body"])["error"]
         assert error["code"] == "VALIDATION_ERROR"
+

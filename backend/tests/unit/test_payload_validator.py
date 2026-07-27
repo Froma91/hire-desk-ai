@@ -10,10 +10,21 @@ Pure pytest example-based tests — no Hypothesis, no mocking (function has no I
 import sys
 import os
 
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "..", ".."))
+# ---------------------------------------------------------------------------
+# Lambda-root isolation bootstrap (ApplicationsFunction / flat layout).
+# ---------------------------------------------------------------------------
+_BACKEND = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+_LAMBDA_ROOT = os.path.join(_BACKEND, "applications_function")
+_FLAT = {"app", "models", "handlers", "services", "validators", "repositories", "business_rules"}
+for _n in list(sys.modules):
+    if _n.split(".")[0] in _FLAT:
+        del sys.modules[_n]
+if _LAMBDA_ROOT in sys.path:
+    sys.path.remove(_LAMBDA_ROOT)
+sys.path.insert(0, _LAMBDA_ROOT)
 
 import pytest
-from backend.applications_function.validators.payload_validator import (
+from validators.payload_validator import (
     validate_application_payload,
 )
 

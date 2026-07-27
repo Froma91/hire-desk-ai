@@ -7,7 +7,7 @@ and NO side effects. It accepts data and a timestamp, and returns stats.
 
 from datetime import datetime, timezone, timedelta
 
-from applications_function.models import Application, DashboardStats, Status
+from models import Application, DashboardStats, Status
 
 
 def compute_stats(applications: list[Application], now: datetime) -> DashboardStats:

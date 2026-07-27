@@ -17,8 +17,8 @@ import json
 import logging
 from typing import Optional
 
-from applications_function.models import Application
-from applications_function.services.applications_service import (
+from models import Application
+from services.applications_service import (
     create_application as svc_create,
     list_applications as svc_list,
     get_application as svc_get,

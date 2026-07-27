@@ -16,7 +16,18 @@ import sys
 import os
 import copy
 
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", ".."))
+# ---------------------------------------------------------------------------
+# Lambda-root isolation bootstrap (ApplicationsFunction / flat layout).
+# ---------------------------------------------------------------------------
+_BACKEND = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+_LAMBDA_ROOT = os.path.join(_BACKEND, "applications_function")
+_FLAT = {"app", "models", "handlers", "services", "validators", "repositories", "business_rules"}
+for _n in list(sys.modules):
+    if _n.split(".")[0] in _FLAT:
+        del sys.modules[_n]
+if _LAMBDA_ROOT in sys.path:
+    sys.path.remove(_LAMBDA_ROOT)
+sys.path.insert(0, _LAMBDA_ROOT)
 
 from datetime import datetime, timezone, timedelta
 
@@ -24,14 +35,15 @@ import pytest
 from hypothesis import given, settings, assume, HealthCheck
 from hypothesis import strategies as st
 
-from applications_function.models import (
+from models import (
     Application,
     NextAction,
     Priority,
     Status,
     StatusEntry,
 )
-from applications_function.business_rules.next_action_engine import compute_next_action
+import business_rules.next_action_engine as _engine_module
+from business_rules.next_action_engine import compute_next_action
 
 
 # ---------------------------------------------------------------------------
@@ -429,7 +441,9 @@ class TestNoIOOrAWSAccess:
 
     def test_no_boto3_import_in_module(self):
         """The engine module does not import boto3 or botocore."""
-        import applications_function.business_rules.next_action_engine as engine_module
+        # Use the reference bound at import time (correct Lambda root was on
+        # sys.path then); re-importing at run time is not collision-safe.
+        engine_module = _engine_module
         source = open(engine_module.__file__).read()
         assert "boto3" not in source
         assert "botocore" not in source

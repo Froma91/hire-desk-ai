@@ -16,14 +16,14 @@ Testable by mocking the repository, current time, and explanation_service.
 from datetime import datetime, timezone
 from typing import Optional
 
-from applications_function.models import Application, NextAction
-from applications_function.repositories.applications_repo import (
+from models import Application, NextAction
+from repositories.applications_repo import (
     NotFoundError,
     RepositoryError,
 )
-from applications_function.business_rules.next_action_engine import compute_next_action
-from applications_function.services.applications_service import _repo
-from applications_function.services.explanation_service import generate_explanation
+from business_rules.next_action_engine import compute_next_action
+from services.applications_service import _repo
+from services.explanation_service import generate_explanation
 
 
 def get_recommendation(application_id: str) -> tuple[Application, Optional[NextAction]]:

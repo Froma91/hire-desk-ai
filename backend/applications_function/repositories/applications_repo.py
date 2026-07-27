@@ -9,7 +9,7 @@ import boto3
 from botocore.config import Config
 from botocore.exceptions import ClientError
 
-from applications_function.models import (
+from models import (
     Application, Status, Priority, StatusEntry, NextAction,
 )
 
