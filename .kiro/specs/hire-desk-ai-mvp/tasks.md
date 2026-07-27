@@ -360,7 +360,7 @@ All AWS calls stay in Lambda (never in the browser). `userId` is always
     - Confirm zero failures; ask the user if questions arise.
 
 - [ ] 13. AWS deployment
-  - [ ] 13.1 Configure `samconfig.toml` for deployment
+  - [x] 13.1 Configure `samconfig.toml` for deployment
     - Create `samconfig.toml` at repo root with default stack name, region, S3 bucket for artifacts, and `confirm_changeset = false`
     - Add `BEDROCK_MODEL_ID` default value (`anthropic.claude-3-haiku-20240307-v1:0`) and `LOG_LEVEL = INFO`
     - _Requirements: 9.1, 9.3_

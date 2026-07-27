@@ -58,6 +58,13 @@
         "chatSessionId": "sess_a693d7b6-0641-4200-a993-e1b1a3c85eaa",
         "timestamp": 1785176197676
       }
+    ],
+    "13.1 Configure `samconfig.toml` for deployment": [
+      {
+        "executionId": "e05580f7-1e21-4e35-b020-12cb1da6f50a",
+        "chatSessionId": "sess_a693d7b6-0641-4200-a993-e1b1a3c85eaa",
+        "timestamp": 1785177034976
+      }
     ]
   }
 }
