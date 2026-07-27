@@ -64,6 +64,26 @@ Resources:
     Type: AWS::Serverless::HttpApi
     Properties:
       StageName: $default
+      DefinitionBody:
+        openapi: 3.0.1
+        info:
+          title: HireDesk AI API
+          version: "1.0"
+        paths: {}
+      CorsConfiguration:
+        AllowOrigins:
+          - http://localhost:5173
+          - http://127.0.0.1:5173
+        AllowHeaders:
+          - Content-Type
+        AllowMethods:
+          - GET
+          - POST
+          - PUT
+          - PATCH
+          - DELETE
+          - OPTIONS
+        MaxAge: 600
 
   # -------------------------------------------------------------------------
   # ApplicationsFunction
