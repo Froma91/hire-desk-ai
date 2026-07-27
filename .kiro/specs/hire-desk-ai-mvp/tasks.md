@@ -342,7 +342,7 @@ All AWS calls stay in Lambda (never in the browser). `userId` is always
     - Run `pytest backend/tests/unit/ -v --tb=short` and fix any failures
     - _Requirements: all backend requirements_
 
-  - [ ] 12.2 Complete frontend unit test suite
+  - [x] 12.2 Complete frontend unit test suite
     - Ensure all test files listed in the design's test layout exist and pass:
       `JobDescriptionForm.spec.ts`, `ExtractionReviewForm.spec.ts`, `KanbanBoard.spec.ts`, `DashboardView.spec.ts`, `routing.spec.ts`, `NavBar.spec.ts`
     - Run `npx vitest run` from the `frontend/` directory and fix any failures
