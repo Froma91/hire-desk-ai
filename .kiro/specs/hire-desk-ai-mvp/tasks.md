@@ -336,7 +336,7 @@ All AWS calls stay in Lambda (never in the browser). `userId` is always
     - _Requirements: 1.7, 1.8, 6.7, 6.8_
 
 - [ ] 12. Essential tests
-  - [ ] 12.1 Complete backend unit test suite
+  - [x] 12.1 Complete backend unit test suite
     - Ensure all test files listed in the design's test layout exist and pass:
       `test_next_action_engine.py`, `test_compute_stats.py`, `test_payload_validator.py`, `test_extraction_validator.py`, `test_applications_handlers.py`, `test_status_handler.py`, `test_analysis_handler.py`
     - Run `pytest backend/tests/unit/ -v --tb=short` and fix any failures
