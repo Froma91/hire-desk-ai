@@ -282,7 +282,7 @@ All AWS calls stay in Lambda (never in the browser). `userId` is always
     - (Property 2 — **Validates: Requirements 1.3, 1.6**)
     - _Requirements: 1.3, 1.6_
 
-  - [ ]* 10.2 Write unit tests for `extraction_validator`
+  - [ ] 10.2 Write unit tests for `extraction_validator`
     - File: `backend/tests/unit/test_extraction_validator.py`
     - Use pytest example-based tests; cover all-keys-present (accept), each key missing individually (reject), null values accepted
     - _Requirements: 1.3, 1.6_
