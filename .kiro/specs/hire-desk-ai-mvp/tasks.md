@@ -370,7 +370,7 @@ All AWS calls stay in Lambda (never in the browser). `userId` is always
     - Create `amplify.yml` at repo root with build commands for the frontend and publish directory `frontend/dist`
     - _Requirements: 9.1_
 
-  - [ ]* 13.3 Verify `sam deploy` produces the expected outputs
+  - [x] 13.3 Verify `sam deploy` produces the expected outputs
     - Run `sam validate --lint` to confirm no template errors
     - Confirm that after `sam deploy`, the `ApiUrl` stack output is present in the CLI output
     - _Requirements: 9.3, 9.6_
