@@ -84,6 +84,18 @@
         "chatSessionId": "sess_a693d7b6-0641-4200-a993-e1b1a3c85eaa",
         "timestamp": 1785177964339
       }
+    ],
+    "13.3 Verify `sam deploy` produces the expected outputs": [
+      {
+        "executionId": "46fe3657-027f-47b1-bc96-5a85c70ecc05",
+        "chatSessionId": "sess_a693d7b6-0641-4200-a993-e1b1a3c85eaa",
+        "timestamp": 1785178372560
+      },
+      {
+        "executionId": "46fe3657-027f-47b1-bc96-5a85c70ecc05",
+        "chatSessionId": "sess_a693d7b6-0641-4200-a993-e1b1a3c85eaa",
+        "timestamp": 1785178882849
+      }
     ]
   }
 }
