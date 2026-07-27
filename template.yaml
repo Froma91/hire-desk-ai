@@ -142,13 +142,6 @@ Resources:
             ApiId: !Ref HttpApi
             Method: GET
             Path: /stats
-        GetRecommendation:
-          Type: HttpApi
-          Properties:
-            ApiId: !Ref HttpApi
-            Method: GET
-            Path: /applications/{id}/recommendation
-
   # -------------------------------------------------------------------------
   # JobAnalysisFunction
   # Handles: /analyze (Bedrock job-description analysis)
@@ -187,6 +180,12 @@ Resources:
             ApiId: !Ref HttpApi
             Method: POST
             Path: /analyze
+        GetRecommendation:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref HttpApi
+            Method: GET
+            Path: /applications/{id}/recommendation
 
 # ---------------------------------------------------------------------------
 # Outputs
