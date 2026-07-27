@@ -385,6 +385,15 @@ All AWS calls stay in Lambda (never in the browser). `userId` is always
     - Add a UI button (visible only in dev/demo mode via `VITE_DEMO_MODE` flag) that calls `DELETE /applications/{id}` for all loaded applications and re-seeds from a local fixture
     - _Requirements: None (demo aid only)_
 
+- [x] 15. Production regression fixes
+  - [x] 15.1 Fix nextAction NULL deserialization crash on status update
+    - Defect: after a drag-and-drop status change, `GET /applications` and `GET /stats` returned HTTP 500 with `TypeError: 'NoneType' object is not subscriptable` while deserializing DynamoDB items where `nextAction` was stored as DynamoDB NULL
+    - `ApplicationsFunction._from_item`: missing `nextAction` → `None`; DynamoDB NULL `nextAction` → `None`; only construct `NextAction` when the raw value is a map/Mapping; support nullable `explanation` (and tolerate a nullable `dueDate` key if present without requiring it)
+    - Status update: when `compute_next_action()` returns `None`, REMOVE the `nextAction` attribute instead of persisting DynamoDB NULL, so no unreadable record is created; preserve all other fields and `statusHistory`
+    - `statusHistory` parsing must skip/handle malformed or missing entries without crashing `GET /applications` or `GET /stats`
+    - Regression tests: `test_applications_repo.py`, `test_null_next_action_handlers.py`, and a `test_status_handler.py` case covering the REMOVE path
+    - _Requirements: 3.2, 4.7, 5.4, 6.10, 6.11_
+
 ---
 
 ## Notes
@@ -417,7 +426,8 @@ All AWS calls stay in Lambda (never in the browser). `userId` is always
     { "id": 11, "tasks": ["13.1", "13.2"] },
     { "id": 12, "tasks": ["13.3"] },
     { "id": 13, "tasks": ["14.1"] },
-    { "id": 14, "tasks": ["14.2"] }
+    { "id": 14, "tasks": ["14.2"] },
+    { "id": 15, "tasks": ["15.1"] }
   ]
 }
 ```
