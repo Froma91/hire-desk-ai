@@ -335,7 +335,7 @@ All AWS calls stay in Lambda (never in the browser). `userId` is always
     - No new code required if covered in task 10.3–10.5 — verify test coverage is complete
     - _Requirements: 1.7, 1.8, 6.7, 6.8_
 
-- [ ] 12. Essential tests
+- [x] 12. Essential tests
   - [x] 12.1 Complete backend unit test suite
     - Ensure all test files listed in the design's test layout exist and pass:
       `test_next_action_engine.py`, `test_compute_stats.py`, `test_payload_validator.py`, `test_extraction_validator.py`, `test_applications_handlers.py`, `test_status_handler.py`, `test_analysis_handler.py`
@@ -355,7 +355,7 @@ All AWS calls stay in Lambda (never in the browser). `userId` is always
     - Mark with `pytest.mark.integration` so they are excluded from default unit test runs
     - _Requirements: 3.1, 3.2, 3.3, 3.7, 5.1, 4.4_
 
-  - [ ] 12.4 Checkpoint — full test suite
+  - [x] 12.4 Checkpoint — full test suite
     - Run `pytest backend/tests/unit/ -v` and `npx vitest run` from `frontend/`
     - Confirm zero failures; ask the user if questions arise.
 
