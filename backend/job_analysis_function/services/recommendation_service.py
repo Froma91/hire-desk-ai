@@ -14,11 +14,11 @@ import boto3
 from botocore.config import Config
 from botocore.exceptions import ClientError
 
-from job_analysis_function.models import (
+from models import (
     Application, Status, Priority, StatusEntry, NextAction,
 )
-from job_analysis_function.services.next_action_engine import compute_next_action
-from job_analysis_function.services.explanation_service import generate_explanation
+from services.next_action_engine import compute_next_action
+from services.explanation_service import generate_explanation
 
 logger = logging.getLogger(__name__)
 

@@ -21,13 +21,13 @@ import json
 import logging
 from typing import Optional
 
-from applications_function.models import ExtractionResult
-from job_analysis_function.services.bedrock_service import (
+from models import ExtractionResult
+from services.bedrock_service import (
     analyze_job_description,
     BedrockTimeoutError,
     BedrockError,
 )
-from job_analysis_function.validators.extraction_validator import (
+from validators.extraction_validator import (
     ExtractionValidationError,
 )
 

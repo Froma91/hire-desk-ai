@@ -4,8 +4,8 @@ import json
 import logging
 import re
 
-from job_analysis_function.handlers.analysis import analyze_job
-from job_analysis_function.handlers.recommendation import get_recommendation_handler
+from handlers.analysis import analyze_job
+from handlers.recommendation import get_recommendation_handler
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)

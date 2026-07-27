@@ -27,8 +27,8 @@ import boto3
 from botocore.config import Config
 from botocore.exceptions import ClientError, ReadTimeoutError, ConnectTimeoutError
 
-from applications_function.models import ExtractionResult
-from job_analysis_function.validators.extraction_validator import (
+from models import ExtractionResult
+from validators.extraction_validator import (
     validate_extraction_result,
     ExtractionValidationError,
 )

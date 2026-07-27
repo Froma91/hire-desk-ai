@@ -10,7 +10,7 @@ This module performs NO I/O, NO Bedrock calls, NO side effects.
 from datetime import datetime
 from typing import Optional
 
-from job_analysis_function.models import (
+from models import (
     Application,
     NextAction,
     Priority,

@@ -4,8 +4,8 @@ import json
 import logging
 from typing import Optional
 
-from job_analysis_function.models import NextAction
-from job_analysis_function.services.recommendation_service import (
+from models import NextAction
+from services.recommendation_service import (
     get_recommendation, NotFoundError, RepositoryError,
 )
 

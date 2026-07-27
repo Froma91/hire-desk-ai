@@ -7,13 +7,26 @@ All service calls are mocked — no real DynamoDB or Bedrock.
 
 import sys
 import os
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", ".."))
+
+# ---------------------------------------------------------------------------
+# Lambda-root isolation bootstrap (JobAnalysisFunction / flat layout).
+# ---------------------------------------------------------------------------
+_BACKEND = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+_LAMBDA_ROOT = os.path.join(_BACKEND, "job_analysis_function")
+_FLAT = {"app", "models", "handlers", "services", "validators", "repositories", "business_rules"}
+for _n in list(sys.modules):
+    if _n.split(".")[0] in _FLAT:
+        del sys.modules[_n]
+if _LAMBDA_ROOT in sys.path:
+    sys.path.remove(_LAMBDA_ROOT)
+sys.path.insert(0, _LAMBDA_ROOT)
 
 import json
 import pytest
 from unittest.mock import patch, MagicMock
 
-from job_analysis_function.app import handler
+import app as app_mod
+from app import handler
 
 
 def _make_event(route_key=None, path_params=None, raw_path=None, body=None):
@@ -73,7 +86,7 @@ class TestRecommendationRouteValidation:
         resp = handler(event, None)
         assert resp["statusCode"] == 400
 
-    @patch("job_analysis_function.app.get_recommendation_handler")
+    @patch.object(app_mod, "get_recommendation_handler")
     def test_recommendation_service_not_called_for_invalid_id(self, mock_handler):
         """recommendation_service is NOT called when ID is invalid."""
         event = _make_event(
@@ -83,7 +96,7 @@ class TestRecommendationRouteValidation:
         handler(event, None)
         mock_handler.assert_not_called()
 
-    @patch("job_analysis_function.app.get_recommendation_handler")
+    @patch.object(app_mod, "get_recommendation_handler")
     def test_valid_id_passed_to_recommendation_handler(self, mock_handler):
         """A valid id is passed through to get_recommendation_handler."""
         mock_handler.return_value = {"statusCode": 200, "headers": {}, "body": "{}"}
@@ -97,7 +110,7 @@ class TestRecommendationRouteValidation:
         call_event = mock_handler.call_args[0][0]
         assert call_event["pathParameters"]["id"] == "valid-uuid-123"
 
-    @patch("job_analysis_function.app.get_recommendation_handler")
+    @patch.object(app_mod, "get_recommendation_handler")
     def test_valid_id_from_raw_path(self, mock_handler):
         """When routeKey is template but rawPath has actual UUID, extracts correctly."""
         mock_handler.return_value = {"statusCode": 200, "headers": {}, "body": "{}"}
@@ -115,7 +128,7 @@ class TestRecommendationRouteValidation:
 class TestAnalyzeRoute:
     """Tests for POST /analyze routing."""
 
-    @patch("job_analysis_function.app.analyze_job")
+    @patch.object(app_mod, "analyze_job")
     def test_post_analyze_routes_to_handler(self, mock_analyze):
         """POST /analyze routes to analyze_job handler."""
         mock_analyze.return_value = {"statusCode": 400, "headers": {}, "body": "{}"}
@@ -151,3 +164,4 @@ class TestErrorResponses:
         )
         resp = handler(event, None)
         assert resp["statusCode"] == 405
+

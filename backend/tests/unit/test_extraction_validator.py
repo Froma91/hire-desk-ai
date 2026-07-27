@@ -11,18 +11,30 @@ import sys
 import os
 import copy
 
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", ".."))
+# ---------------------------------------------------------------------------
+# Lambda-root isolation bootstrap (JobAnalysisFunction / flat layout).
+# ---------------------------------------------------------------------------
+_BACKEND = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+_LAMBDA_ROOT = os.path.join(_BACKEND, "job_analysis_function")
+_FLAT = {"app", "models", "handlers", "services", "validators", "repositories", "business_rules"}
+for _n in list(sys.modules):
+    if _n.split(".")[0] in _FLAT:
+        del sys.modules[_n]
+if _LAMBDA_ROOT in sys.path:
+    sys.path.remove(_LAMBDA_ROOT)
+sys.path.insert(0, _LAMBDA_ROOT)
 
 import pytest
 from hypothesis import given, settings, assume
 from hypothesis import strategies as st
 
-from job_analysis_function.validators.extraction_validator import (
+import validators.extraction_validator as _extraction_module
+from validators.extraction_validator import (
     validate_extraction_result,
     ExtractionValidationError,
     REQUIRED_KEYS,
 )
-from applications_function.models import ExtractionResult
+from models import ExtractionResult
 
 
 # ---------------------------------------------------------------------------
@@ -342,7 +354,9 @@ class TestNoSideEffects:
 
     def test_no_boto3_in_module(self):
         """The validator module does not import boto3 or botocore."""
-        import job_analysis_function.validators.extraction_validator as mod
+        # Use the reference bound at import time (correct Lambda root was on
+        # sys.path then); re-importing at run time is not collision-safe.
+        mod = _extraction_module
         source = open(mod.__file__).read()
         assert "boto3" not in source
         assert "botocore" not in source

@@ -49,3 +49,14 @@ class Application:
     experienceLevel: Optional[str] = None
     statusHistory: list[StatusEntry] = field(default_factory=list)
     nextAction: Optional[NextAction] = None
+
+
+@dataclass
+class ExtractionResult:
+    jobTitle: Optional[str]
+    company: Optional[str]
+    location: Optional[str]
+    skills: list[str]
+    responsibilities: list[str]
+    languages: list[str]
+    experienceLevel: Optional[str]

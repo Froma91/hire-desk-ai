@@ -18,7 +18,7 @@ Property 2: Bedrock extraction validation accepts iff all required keys present.
 Requirements: 1.3, 1.6
 """
 
-from applications_function.models import ExtractionResult
+from models import ExtractionResult
 
 
 # ---------------------------------------------------------------------------
