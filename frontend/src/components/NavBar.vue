@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { RouterLink } from 'vue-router'
+import ReminderButton from '@/components/ReminderButton.vue'
 </script>
 
 <template>
@@ -9,6 +10,7 @@ import { RouterLink } from 'vue-router'
       <RouterLink to="/board" class="nav-link">Board</RouterLink>
       <RouterLink to="/dashboard" class="nav-link">Dashboard</RouterLink>
       <RouterLink to="/new" class="nav-link">New Application</RouterLink>
+      <ReminderButton />
     </div>
   </nav>
 </template>

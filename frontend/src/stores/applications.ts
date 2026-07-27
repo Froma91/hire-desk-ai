@@ -31,6 +31,7 @@ export interface NextAction {
   label: string
   priority: string
   explanation: string | null
+  dueDate?: string | null // ISO 8601; optional — backend may omit it
 }
 
 export interface Application {
