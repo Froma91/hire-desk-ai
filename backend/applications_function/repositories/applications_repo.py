@@ -2,6 +2,7 @@
 
 import os
 import logging
+from collections.abc import Mapping
 from datetime import datetime, timezone
 from typing import Optional
 
@@ -125,7 +126,13 @@ class ApplicationsRepo:
         return applications
 
     def update(self, application_id: str, fields: dict) -> Application:
-        """Partial update. Raises NotFoundError if absent."""
+        """Partial update. Raises NotFoundError if absent.
+
+        Fields whose value is ``None`` are REMOVEd from the item rather than
+        stored as a DynamoDB NULL. This prevents persisting attributes such as
+        ``nextAction = NULL`` which previously broke every reader that
+        deserialised the item.
+        """
         # Serialise field values before passing to DynamoDB
         serialised: dict = {}
         for key, value in fields.items():
@@ -137,30 +144,46 @@ class ApplicationsRepo:
                 serialised[key] = value
 
         set_parts: list[str] = []
+        remove_parts: list[str] = []
         expr_names: dict[str, str] = {}
         expr_values: dict[str, object] = {}
 
         for i, (key, value) in enumerate(serialised.items()):
             placeholder_name = f"#f{i}"
-            placeholder_value = f":v{i}"
             expr_names[placeholder_name] = key
-            expr_values[placeholder_value] = value
-            set_parts.append(f"{placeholder_name} = {placeholder_value}")
+            if value is None:
+                # Translate a None value into a REMOVE clause so the attribute
+                # is dropped instead of being stored as NULL.
+                remove_parts.append(placeholder_name)
+            else:
+                placeholder_value = f":v{i}"
+                expr_values[placeholder_value] = value
+                set_parts.append(f"{placeholder_name} = {placeholder_value}")
 
-        update_expr = "SET " + ", ".join(set_parts)
+        clauses: list[str] = []
+        if set_parts:
+            clauses.append("SET " + ", ".join(set_parts))
+        if remove_parts:
+            clauses.append("REMOVE " + ", ".join(remove_parts))
+        update_expr = " ".join(clauses)
+
+        update_kwargs: dict = {
+            "Key": {
+                "userId": DEMO_USER_ID,
+                "applicationId": application_id,
+            },
+            "UpdateExpression": update_expr,
+            "ExpressionAttributeNames": expr_names,
+            "ConditionExpression": "attribute_exists(applicationId)",
+            "ReturnValues": "ALL_NEW",
+        }
+        # Only include ExpressionAttributeValues when there is at least one SET
+        # value; DynamoDB rejects an empty/unused values map.
+        if expr_values:
+            update_kwargs["ExpressionAttributeValues"] = expr_values
 
         try:
-            response = self._table.update_item(
-                Key={
-                    "userId": DEMO_USER_ID,
-                    "applicationId": application_id,
-                },
-                UpdateExpression=update_expr,
-                ExpressionAttributeNames=expr_names,
-                ExpressionAttributeValues=expr_values,
-                ConditionExpression="attribute_exists(applicationId)",
-                ReturnValues="ALL_NEW",
-            )
+            response = self._table.update_item(**update_kwargs)
         except ClientError as e:
             code = e.response["Error"]["Code"]
             if code == "ConditionalCheckFailedException":
@@ -242,22 +265,80 @@ class ApplicationsRepo:
                 dt = dt.replace(tzinfo=timezone.utc)
             return dt
 
+        # nextAction — defensively deserialize.
+        #   - attribute missing               → None
+        #   - attribute stored as NULL (None) → None
+        #   - attribute stored as a map/dict  → build NextAction
+        # Never subscript a None value (this was the production defect: a
+        # persisted `nextAction = NULL` broke every reader that touched it).
         next_action: Optional[NextAction] = None
-        if "nextAction" in item:
-            na = item["nextAction"]
-            next_action = NextAction(
-                label=na["label"],
-                priority=Priority(na["priority"]),
-                explanation=na.get("explanation"),
-            )
+        raw_na = item.get("nextAction")
+        if isinstance(raw_na, Mapping):
+            label = raw_na.get("label")
+            raw_priority = raw_na.get("priority")
+            priority: Optional[Priority] = None
+            if raw_priority is not None:
+                try:
+                    priority = Priority(raw_priority)
+                except ValueError:
+                    logger.warning(
+                        "repo: _from_item invalid nextAction.priority=%r application_id=%s",
+                        raw_priority,
+                        item.get("applicationId"),
+                    )
+                    priority = None
+            # Only construct a NextAction when the minimally-required fields
+            # are usable; otherwise leave it as None rather than crashing.
+            if label is not None and priority is not None:
+                next_action = NextAction(
+                    label=label,
+                    priority=priority,
+                    explanation=raw_na.get("explanation"),
+                )
+            else:
+                logger.warning(
+                    "repo: _from_item skipping malformed nextAction=%r application_id=%s",
+                    raw_na,
+                    item.get("applicationId"),
+                )
 
-        status_history: list[StatusEntry] = [
-            StatusEntry(
-                status=Status(e["status"]),
-                timestamp=parse_dt(e["timestamp"]),
-            )
-            for e in item.get("statusHistory", [])
-        ]
+        # statusHistory — defensively parse. A single malformed entry must not
+        # break the entire GET /applications or GET /stats response, so skip
+        # entries that are not well-formed dicts with a valid status/timestamp.
+        status_history: list[StatusEntry] = []
+        for e in item.get("statusHistory", []) or []:
+            if not isinstance(e, Mapping):
+                logger.warning(
+                    "repo: _from_item skipping non-dict statusHistory entry=%r application_id=%s",
+                    e,
+                    item.get("applicationId"),
+                )
+                continue
+            raw_status = e.get("status")
+            raw_ts = e.get("timestamp")
+            if raw_status is None or raw_ts is None:
+                logger.warning(
+                    "repo: _from_item skipping incomplete statusHistory entry=%r application_id=%s",
+                    e,
+                    item.get("applicationId"),
+                )
+                continue
+            try:
+                status_history.append(
+                    StatusEntry(
+                        status=Status(raw_status),
+                        timestamp=parse_dt(raw_ts),
+                    )
+                )
+            except (ValueError, TypeError) as exc:
+                logger.warning(
+                    "repo: _from_item skipping malformed statusHistory entry=%r "
+                    "application_id=%s error=%s",
+                    e,
+                    item.get("applicationId"),
+                    exc,
+                )
+                continue
 
         return Application(
             userId=item["userId"],

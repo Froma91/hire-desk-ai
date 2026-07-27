@@ -187,7 +187,10 @@ def update_status(event: dict) -> dict:
         if next_action.explanation is not None:
             next_action_dict["explanation"] = next_action.explanation
 
-    # 6. Persist all changes in a single update
+    # 6. Persist all changes in a single update.
+    # When compute_next_action() returns None, next_action_dict is None and the
+    # repository translates that into a REMOVE clause (dropping the attribute)
+    # rather than storing nextAction = NULL, which previously corrupted reads.
     fields = {
         "status": new_status,
         "statusHistory": updated_history,

@@ -230,6 +230,53 @@ class TestErrorHandling:
         assert "boom" not in response["body"]
 
 
+@patch.object(status_mod, "compute_next_action")
+@patch.object(status_mod, "_repo")
+@patch.object(status_mod, "svc_get_application")
+class TestNextActionRemovedWhenNone:
+    def test_none_next_action_passes_none_to_repo(
+        self, mock_get_app, mock_repo, mock_compute
+    ):
+        """
+        When compute_next_action returns None, the handler must pass
+        nextAction=None to repo.update so the repository issues a REMOVE
+        (rather than persisting a DynamoDB NULL). Other fields and the
+        appended statusHistory must be preserved.
+        """
+        app = _sample_app()
+        mock_get_app.return_value = app
+
+        # Deterministic engine decides there is no next action for this state.
+        mock_compute.return_value = None
+
+        updated_app = _sample_app(status=Status.APPLIED)
+        updated_app.nextAction = None
+        mock_repo_instance = MagicMock()
+        mock_repo_instance.update.return_value = updated_app
+        mock_repo.return_value = mock_repo_instance
+
+        response = update_status(_make_event(status_value="Applied"))
+
+        assert response["statusCode"] == 200
+        body = json.loads(response["body"])
+        assert body["nextAction"] is None
+
+        # Inspect the fields dict passed to repo.update
+        call_args = mock_repo_instance.update.call_args
+        # Positional: update(application_id, fields)
+        fields = call_args[0][1] if len(call_args[0]) > 1 else call_args[1]["fields"]
+
+        assert "nextAction" in fields
+        assert fields["nextAction"] is None  # signals REMOVE at the repo layer
+
+        # Other fields preserved
+        assert fields["status"] == Status.APPLIED
+        assert "updatedAt" in fields
+        # statusHistory preserved and appended (original 1 + new 1)
+        assert len(fields["statusHistory"]) == 2
+        assert fields["statusHistory"][-1]["status"] == "Applied"
+
+
 class TestMissingFields:
     def test_missing_status_field_returns_400(self):
         """Missing status field in body returns 400."""
