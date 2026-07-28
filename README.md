@@ -3,11 +3,13 @@
 Hire Desk AI is a cloud-native job application tracking MVP that helps job seekers
 organize, analyze, and track their job applications through a clear, structured workflow.
 
-> **Demo links (TODO placeholders — not yet available):**
->
-> - **Live demo:** _TODO — add the deployed application URL._
-> - **Demonstration video:** _TODO — add the demo video link._
-> - **Screenshots:** _TODO — add images under_ `docs/screenshots/`, _for example:_
+> ## Live Demo
+
+[Open the Hire Desk AI live application](https://main.d1wlcrl0ettzw2.amplifyapp.com)
+
+The Amazon Bedrock analysis currently depends on the activation of Anthropic
+first-time use-case details for the AWS account. The rest of the application,
+including the manual fallback workflow, remains operational.
 >
 >## Screenshots
 
