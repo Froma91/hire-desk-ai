@@ -337,5 +337,6 @@ Hire Desk AI was developed as an AWS / Kiro hackathon MVP.
 
 ## License
 
-No license has been selected yet. There is currently no `LICENSE` file in the
-repository.
+This project is licensed under the [MIT License](LICENSE).
+
+Copyright © 2026 Fredy Rodriguez.
