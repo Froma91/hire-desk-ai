@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { reactive } from 'vue'
+import { reactive, ref } from 'vue'
 import { useApplicationsStore, type ApplicationStatus, type Application } from '@/stores/applications'
 import { useUiStore } from '@/stores/ui'
 import KanbanColumn from '@/components/KanbanColumn.vue'
+import ApplicationDetailsModal from '@/components/ApplicationDetailsModal.vue'
 
 const applicationsStore = useApplicationsStore()
 const uiStore = useUiStore()
@@ -32,6 +33,12 @@ function applicationsByStatus(status: ApplicationStatus): Application[] {
 // ---------------------------------------------------------------------------
 
 const pendingUpdates = reactive(new Set<string>())
+
+// ---------------------------------------------------------------------------
+// Details modal state
+// ---------------------------------------------------------------------------
+
+const selectedApplication = ref<Application | null>(null)
 
 // ---------------------------------------------------------------------------
 // Drop handler
@@ -73,6 +80,13 @@ async function handleDrop(payload: { applicationId: string; status: ApplicationS
       :status="status"
       :applications="applicationsByStatus(status)"
       @drop="handleDrop"
+      @open="selectedApplication = $event"
+    />
+
+    <ApplicationDetailsModal
+      v-if="selectedApplication"
+      :application="selectedApplication"
+      @close="selectedApplication = null"
     />
   </div>
 </template>

@@ -10,6 +10,7 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   drop: [payload: { applicationId: string; status: ApplicationStatus }]
+  open: [application: Application]
 }>()
 
 const isDragOver = ref(false)
@@ -64,6 +65,7 @@ function onDrop(event: DragEvent): void {
         v-for="app in props.applications"
         :key="app.applicationId"
         :application="app"
+        @open="(application) => emit('open', application)"
       />
     </div>
   </section>
@@ -76,49 +78,51 @@ function onDrop(event: DragEvent): void {
   min-width: 14rem;
   max-width: 20rem;
   flex: 1;
-  background-color: #f3f4f6;
-  border-radius: 8px;
-  padding: 0.75rem;
-  transition: background-color 0.2s, border-color 0.2s;
-  border: 2px solid transparent;
+  background-color: var(--color-surface-muted);
+  border-radius: var(--radius-md);
+  padding: var(--space-3);
+  transition: background-color var(--transition-base), border-color var(--transition-base);
+  border: 2px solid var(--color-border);
 }
 
 .kanban-column--drag-over {
-  background-color: #ede9fe;
-  border-color: #8b5cf6;
+  background-color: var(--color-blue-100);
+  border-color: var(--color-blue-500);
 }
 
 .kanban-column-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 0.75rem;
-  padding-bottom: 0.5rem;
-  border-bottom: 1px solid #e5e7eb;
+  margin-bottom: var(--space-3);
+  padding-bottom: var(--space-2);
+  border-bottom: 1px solid var(--color-border);
 }
 
 .kanban-column-title {
   font-size: 0.85rem;
   font-weight: 700;
-  color: #374151;
+  color: var(--color-navy-800);
   margin: 0;
   text-transform: uppercase;
   letter-spacing: 0.03em;
 }
 
 .kanban-column-count {
-  background-color: #e5e7eb;
-  color: #374151;
+  background-color: var(--color-border);
+  color: var(--color-text-secondary);
   font-size: 0.75rem;
-  font-weight: 600;
-  padding: 0.15rem 0.5rem;
-  border-radius: 10px;
+  font-weight: 700;
+  padding: 0.15rem 0.55rem;
+  border-radius: 999px;
+  min-width: 1.5rem;
+  text-align: center;
 }
 
 .kanban-column-body {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: var(--space-2);
   min-height: 4rem;
 }
 
@@ -127,19 +131,21 @@ function onDrop(event: DragEvent): void {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 1.5rem 0.5rem;
+  padding: var(--space-5) var(--space-2);
   text-align: center;
+  border: 1px dashed var(--color-border-strong);
+  border-radius: var(--radius-sm);
 }
 
 .kanban-column-empty-text {
   font-size: 0.85rem;
-  color: #9ca3af;
+  color: var(--color-text-secondary);
   font-weight: 500;
 }
 
 .kanban-column-empty-hint {
   font-size: 0.75rem;
-  color: #d1d5db;
+  color: var(--color-border-strong);
   margin-top: 0.25rem;
 }
 

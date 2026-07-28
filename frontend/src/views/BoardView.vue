@@ -61,10 +61,11 @@ onMounted(() => {
 }
 
 .board-view-title {
-  font-size: 1.5rem;
+  font-family: var(--font-serif);
+  font-size: 2.25rem;
   font-weight: 700;
-  color: #1a1a2e;
-  margin-bottom: 1.25rem;
+  color: var(--color-text-primary);
+  margin: 0 0 var(--space-5);
 }
 
 .board-view-loading {
@@ -72,17 +73,17 @@ onMounted(() => {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 4rem 1rem;
-  gap: 1rem;
-  color: #6b7280;
+  padding: var(--space-8) var(--space-4);
+  gap: var(--space-4);
+  color: var(--color-text-secondary);
   font-size: 0.95rem;
 }
 
 .board-view-spinner {
   width: 2.5rem;
   height: 2.5rem;
-  border: 3px solid #e5e7eb;
-  border-top-color: #e94560;
+  border: 3px solid var(--color-border);
+  border-top-color: var(--color-blue-600);
   border-radius: 50%;
   animation: spin 0.7s linear infinite;
 }
@@ -97,11 +98,11 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1rem;
-  padding: 3rem 1rem;
-  background-color: #fef2f2;
-  border: 1px solid #fecaca;
-  border-radius: 8px;
+  gap: var(--space-4);
+  padding: var(--space-8) var(--space-4);
+  background-color: var(--color-rejected-soft);
+  border: 1px solid var(--color-rejected);
+  border-radius: var(--radius-md);
   text-align: center;
 }
 
@@ -112,18 +113,26 @@ onMounted(() => {
 }
 
 .board-view-retry {
-  padding: 0.5rem 1.25rem;
-  background-color: #e94560;
-  color: #ffffff;
+  min-height: 44px;
+  padding: 0.6rem 1.5rem;
+  background-color: var(--color-blue-600);
+  color: var(--color-text-inverse);
   border: none;
-  border-radius: 6px;
-  font-size: 0.85rem;
+  border-radius: var(--radius-sm);
+  font-family: inherit;
+  font-size: 0.9rem;
   font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: background-color var(--transition-fast);
 }
 
 .board-view-retry:hover {
-  background-color: #d63851;
+  background-color: var(--color-blue-700);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .board-view-spinner {
+    animation: none;
+  }
 }
 </style>
