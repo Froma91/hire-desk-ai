@@ -9,9 +9,15 @@ organize, analyze, and track their job applications through a clear, structured 
 > - **Demonstration video:** _TODO — add the demo video link._
 > - **Screenshots:** _TODO — add images under_ `docs/screenshots/`, _for example:_
 >
->   ![Dashboard screenshot placeholder](docs/screenshots/dashboard.png)
->   ![Kanban board screenshot placeholder](docs/screenshots/kanban-board.png)
+>## Screenshots
 
+### Dashboard
+
+![Hire Desk AI dashboard](docs/screenshots/dashboard.png)
+
+### Kanban Board
+
+![Hire Desk AI Kanban board](docs/screenshots/kanban-board.png)
 ## Overview
 
 Hire Desk AI is a cloud-native job application tracking MVP. It centralizes the
