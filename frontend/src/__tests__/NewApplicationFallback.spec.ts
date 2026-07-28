@@ -246,6 +246,10 @@ describe('NewApplicationView — analysis fallback', () => {
 // ---------------------------------------------------------------------------
 
 describe('ApplicationCard — recommendation explanation: null', () => {
+  beforeEach(() => {
+    setActivePinia(createPinia())
+  })
+
   it('renders normally when nextAction.explanation is null', () => {
     const app = makeApp({
       nextAction: { label: 'Prepare for interview', priority: 'High', explanation: null },

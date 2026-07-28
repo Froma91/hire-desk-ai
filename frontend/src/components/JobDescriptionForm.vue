@@ -108,30 +108,32 @@ function handleSubmit(): void {
 .jd-form-label {
   font-size: 0.95rem;
   font-weight: 600;
-  color: #1a1a2e;
+  color: var(--color-navy-800);
 }
 
 .jd-form-textarea {
   width: 100%;
   min-height: 14rem;
-  padding: 0.75rem;
-  border: 1px solid #d1d5db;
-  border-radius: 6px;
+  padding: var(--space-3);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-sm);
   font-family: inherit;
   font-size: 0.9rem;
   line-height: 1.5;
+  color: var(--color-text-primary);
+  background-color: var(--color-surface);
   resize: vertical;
-  transition: border-color 0.2s;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
 }
 
 .jd-form-textarea:focus {
   outline: none;
-  border-color: #e94560;
-  box-shadow: 0 0 0 2px rgba(233, 69, 96, 0.15);
+  border-color: var(--color-blue-600);
+  box-shadow: 0 0 0 3px var(--color-blue-100);
 }
 
 .jd-form-textarea--error {
-  border-color: #dc3545;
+  border-color: var(--color-rejected);
 }
 
 .jd-form-footer {
@@ -143,38 +145,40 @@ function handleSubmit(): void {
 
 .jd-form-count {
   font-size: 0.8rem;
-  color: #6b7280;
+  color: var(--color-text-secondary);
 }
 
 .jd-form-count--error {
-  color: #dc3545;
+  color: var(--color-rejected);
   font-weight: 600;
 }
 
 .jd-form-validation {
   font-size: 0.8rem;
-  color: #dc3545;
+  color: var(--color-rejected);
   font-weight: 500;
 }
 
 .jd-form-button {
   margin-left: auto;
-  padding: 0.6rem 1.5rem;
-  background-color: #e94560;
-  color: #ffffff;
+  min-height: 44px;
+  padding: 0.6rem 1.75rem;
+  background-color: var(--color-blue-600);
+  color: var(--color-text-inverse);
   border: none;
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
+  font-family: inherit;
   font-size: 0.9rem;
   font-weight: 600;
   cursor: pointer;
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  transition: background-color 0.2s, opacity 0.2s;
+  transition: background-color var(--transition-fast), opacity var(--transition-fast);
 }
 
 .jd-form-button:hover:not(:disabled) {
-  background-color: #d63851;
+  background-color: var(--color-blue-700);
 }
 
 .jd-form-button:disabled {
@@ -195,6 +199,12 @@ function handleSubmit(): void {
 @keyframes spin {
   to {
     transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .jd-form-button-spinner {
+    animation: none;
   }
 }
 

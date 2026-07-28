@@ -91,21 +91,23 @@ async function handleConfirm(formData: ConfirmPayload): Promise<void> {
   <div class="new-application-view">
     <h1 class="new-application-title">New Application</h1>
 
-    <!-- Step 1: Paste & analyze job description -->
-    <JobDescriptionForm
-      v-if="step === 'input'"
-      :loading="analyzing"
-      @analyze="handleAnalyze"
-    />
+    <div class="new-application-card">
+      <!-- Step 1: Paste & analyze job description -->
+      <JobDescriptionForm
+        v-if="step === 'input'"
+        :loading="analyzing"
+        @analyze="handleAnalyze"
+      />
 
-    <!-- Step 2: Review & confirm extracted information -->
-    <ExtractionReviewForm
-      v-if="step === 'review'"
-      :extraction="extraction"
-      :save-error="saveError"
-      :loading="saving"
-      @confirm="handleConfirm"
-    />
+      <!-- Step 2: Review & confirm extracted information -->
+      <ExtractionReviewForm
+        v-if="step === 'review'"
+        :extraction="extraction"
+        :save-error="saveError"
+        :loading="saving"
+        @confirm="handleConfirm"
+      />
+    </div>
   </div>
 </template>
 
@@ -116,9 +118,24 @@ async function handleConfirm(formData: ConfirmPayload): Promise<void> {
 }
 
 .new-application-title {
-  font-size: 1.5rem;
+  font-family: var(--font-serif);
+  font-size: 2.25rem;
   font-weight: 700;
-  color: #1a1a2e;
-  margin-bottom: 1.5rem;
+  color: var(--color-text-primary);
+  margin: 0 0 var(--space-5);
+}
+
+.new-application-card {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  padding: var(--space-6);
+}
+
+@media (max-width: 600px) {
+  .new-application-card {
+    padding: var(--space-4);
+  }
 }
 </style>

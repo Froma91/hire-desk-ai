@@ -15,6 +15,7 @@ import {
   requestReminderPermission,
   notifyDueApplications,
 } from '@/composables/useReminders'
+import IconBell from '@/components/icons/IconBell.vue'
 
 const store = useApplicationsStore()
 
@@ -43,30 +44,43 @@ async function onEnableReminders(): Promise<void> {
     :disabled="enabled"
     @click="onEnableReminders"
   >
+    <IconBell class="reminder-button-icon" size="1.05em" />
     {{ enabled ? 'Reminders on' : 'Enable reminders' }}
   </button>
 </template>
 
 <style scoped>
 .reminder-button {
-  color: #a8a8b3;
-  background-color: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  padding: 0.5rem 0.75rem;
-  border-radius: 4px;
-  font-size: 0.9rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: rgba(255, 255, 255, 0.82);
+  background-color: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  padding: 0.5rem 0.85rem;
+  border-radius: var(--radius-sm);
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
   cursor: pointer;
-  transition: color 0.2s, background-color 0.2s, border-color 0.2s;
+  transition: color var(--transition-fast), background-color var(--transition-fast),
+    border-color var(--transition-fast);
+}
+
+.reminder-button-icon {
+  flex-shrink: 0;
 }
 
 .reminder-button:hover:not(:disabled) {
-  color: #ffffff;
-  background-color: rgba(255, 255, 255, 0.1);
+  color: var(--color-text-inverse);
+  background-color: rgba(255, 255, 255, 0.14);
+  border-color: rgba(255, 255, 255, 0.4);
 }
 
 .reminder-button:disabled {
-  color: #ffffff;
-  border-color: #e94560;
+  color: var(--color-text-inverse);
+  background-color: rgba(67, 136, 242, 0.28);
+  border-color: var(--color-blue-500);
   cursor: default;
 }
 </style>

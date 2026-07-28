@@ -1,0 +1,26 @@
+:root {
+  --color-navy-950:#071a36; --color-navy-900:#0b2347; --color-navy-800:#12315f;
+  --color-blue-700:#245dcc; --color-blue-600:#3175e8; --color-blue-500:#4388f2; --color-blue-100:#eaf2ff;
+  --color-background:#f5f7fb; --color-surface:#ffffff; --color-surface-muted:#f0f3f8;
+  --color-text-primary:#10213d; --color-text-secondary:#667085; --color-text-inverse:#ffffff;
+  --color-border:#e2e7ef; --color-border-strong:#cbd3df;
+  --color-wishlist:#2f80ed; --color-wishlist-soft:#e8f3ff;
+  --color-applied:#21a366; --color-applied-soft:#e4f6ec;
+  --color-interview:#d58a00; --color-interview-soft:#fff2d8;
+  --color-offer:#6c4ed8; --color-offer-soft:#eee9ff;
+  --color-rejected:#e5484d; --color-rejected-soft:#fdebec;
+  --shadow-sm:0 2px 8px rgba(16,33,61,0.06); --shadow-md:0 8px 24px rgba(16,33,61,0.09); --shadow-lg:0 18px 48px rgba(16,33,61,0.13);
+  --radius-sm:8px; --radius-md:12px; --radius-lg:16px;
+  --font-sans: Inter, ui-sans-serif, system-ui, sans-serif;
+  --font-serif: Georgia, "Times New Roman", ui-serif, serif;
+  --transition-fast: 150ms ease; --transition-base: 200ms ease;
+
+  /* Spacing scale */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-8: 3rem;
+}

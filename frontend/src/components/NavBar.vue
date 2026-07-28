@@ -5,7 +5,9 @@ import ReminderButton from '@/components/ReminderButton.vue'
 
 <template>
   <nav class="navbar">
-    <div class="navbar-brand">Hire Desk AI</div>
+    <div class="navbar-brand">
+      <span class="navbar-brand-name">Hire Desk</span><span class="navbar-brand-accent">AI</span>
+    </div>
     <div class="navbar-links">
       <RouterLink to="/board" class="nav-link">Board</RouterLink>
       <RouterLink to="/dashboard" class="nav-link">Dashboard</RouterLink>
@@ -20,53 +22,84 @@ import ReminderButton from '@/components/ReminderButton.vue'
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0.75rem 1.5rem;
-  background-color: #1a1a2e;
-  color: #ffffff;
+  gap: var(--space-4);
+  min-height: 76px;
+  padding: 0 var(--space-6);
+  background: linear-gradient(135deg, var(--color-navy-900) 0%, var(--color-navy-800) 100%);
+  color: var(--color-text-inverse);
 }
 
 .navbar-brand {
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: #e94560;
+  font-size: 1.35rem;
+  font-weight: 800;
+  letter-spacing: 0.01em;
+  font-family: var(--font-serif);
+}
+
+.navbar-brand-name {
+  color: var(--color-text-inverse);
+}
+
+.navbar-brand-accent {
+  color: var(--color-blue-500);
+  margin-left: 0.15rem;
 }
 
 .navbar-links {
   display: flex;
-  gap: 1rem;
+  align-items: center;
+  gap: var(--space-2);
 }
 
 .nav-link {
-  color: #a8a8b3;
+  position: relative;
+  color: rgba(255, 255, 255, 0.72);
   text-decoration: none;
-  padding: 0.5rem 0.75rem;
-  border-radius: 4px;
+  padding: 0.6rem 0.85rem;
+  border-radius: var(--radius-sm);
   font-size: 0.9rem;
-  transition: color 0.2s, background-color 0.2s;
+  font-weight: 500;
+  transition: color var(--transition-fast), background-color var(--transition-fast);
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  left: 0.85rem;
+  right: 0.85rem;
+  bottom: 0.15rem;
+  height: 2px;
+  border-radius: 2px;
+  background-color: transparent;
+  transition: background-color var(--transition-fast);
 }
 
 .nav-link:hover {
-  color: #ffffff;
-  background-color: rgba(255, 255, 255, 0.1);
+  color: var(--color-text-inverse);
+  background-color: rgba(255, 255, 255, 0.08);
 }
 
 .nav-link.router-link-active {
-  color: #ffffff;
-  background-color: #e94560;
+  color: var(--color-text-inverse);
   font-weight: 600;
+}
+
+.nav-link.router-link-active::after {
+  background-color: var(--color-blue-500);
 }
 
 /* Responsive: stack on small screens */
 @media (max-width: 600px) {
   .navbar {
     flex-direction: column;
-    gap: 0.5rem;
-    padding: 0.75rem 1rem;
+    gap: var(--space-2);
+    padding: var(--space-3) var(--space-4);
   }
 
   .navbar-links {
     width: 100%;
     justify-content: center;
+    flex-wrap: wrap;
   }
 }
 </style>

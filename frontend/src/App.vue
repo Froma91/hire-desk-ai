@@ -15,6 +15,14 @@ import NotificationToast from '@/components/NotificationToast.vue'
 
 <style scoped>
 main {
-  padding: 1rem 1.5rem;
+  padding: var(--space-6) var(--space-5);
+  max-width: 80rem;
+  margin: 0 auto;
+}
+
+@media (max-width: 600px) {
+  main {
+    padding: var(--space-4) var(--space-4);
+  }
 }
 </style>

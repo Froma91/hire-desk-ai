@@ -1,7 +1,23 @@
 <script setup lang="ts">
+import type { Component } from 'vue'
 import { useUiStore } from '@/stores/ui'
+import IconCheckCircle from '@/components/icons/IconCheckCircle.vue'
+import IconCircleX from '@/components/icons/IconCircleX.vue'
+import IconAlertTriangle from '@/components/icons/IconAlertTriangle.vue'
+import IconInfo from '@/components/icons/IconInfo.vue'
 
 const uiStore = useUiStore()
+
+const TYPE_ICONS: Record<string, Component> = {
+  success: IconCheckCircle,
+  error: IconCircleX,
+  warning: IconAlertTriangle,
+  info: IconInfo,
+}
+
+function iconFor(type: string): Component {
+  return TYPE_ICONS[type] ?? IconInfo
+}
 </script>
 
 <template>
@@ -12,6 +28,9 @@ const uiStore = useUiStore()
       :class="['toast', `toast--${notification.type}`]"
       role="alert"
     >
+      <span class="toast-icon" aria-hidden="true">
+        <component :is="iconFor(notification.type)" size="1.15rem" />
+      </span>
       <span class="toast-message">{{ notification.message }}</span>
       <button
         class="toast-dismiss"
@@ -43,38 +62,53 @@ const uiStore = useUiStore()
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 0.75rem;
-  padding: 0.75rem 1rem;
-  border-radius: 6px;
+  gap: 0.65rem;
+  padding: 0.85rem 1rem;
+  border-radius: var(--radius-md);
   font-size: 0.9rem;
   line-height: 1.4;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  background-color: var(--color-surface);
+  color: var(--color-text-primary);
+  border: 1px solid var(--color-border);
+  border-left-width: 4px;
+  box-shadow: var(--shadow-md);
   pointer-events: auto;
   animation: slide-in 0.25s ease-out;
 }
 
+.toast-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
 .toast--success {
-  background-color: #d4edda;
-  color: #155724;
-  border: 1px solid #c3e6cb;
+  border-left-color: var(--color-applied);
+}
+.toast--success .toast-icon {
+  color: var(--color-applied);
 }
 
 .toast--error {
-  background-color: #f8d7da;
-  color: #721c24;
-  border: 1px solid #f5c6cb;
+  border-left-color: var(--color-rejected);
+}
+.toast--error .toast-icon {
+  color: var(--color-rejected);
 }
 
 .toast--warning {
-  background-color: #fff3cd;
-  color: #856404;
-  border: 1px solid #ffeeba;
+  border-left-color: var(--color-interview);
+}
+.toast--warning .toast-icon {
+  color: var(--color-interview);
 }
 
 .toast--info {
-  background-color: #d1ecf1;
-  color: #0c5460;
-  border: 1px solid #bee5eb;
+  border-left-color: var(--color-blue-600);
+}
+.toast--info .toast-icon {
+  color: var(--color-blue-600);
 }
 
 .toast-message {
@@ -106,6 +140,12 @@ const uiStore = useUiStore()
   to {
     opacity: 1;
     transform: translateX(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .toast {
+    animation: none;
   }
 }
 

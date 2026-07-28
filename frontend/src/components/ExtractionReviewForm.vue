@@ -355,10 +355,10 @@ function handleConfirm(): void {
 
 .review-form-error {
   padding: 0.75rem 1rem;
-  background-color: #f8d7da;
+  background-color: var(--color-rejected-soft);
   color: #721c24;
-  border: 1px solid #f5c6cb;
-  border-radius: 6px;
+  border: 1px solid var(--color-rejected);
+  border-radius: var(--radius-sm);
   font-size: 0.9rem;
 }
 
@@ -377,39 +377,41 @@ function handleConfirm(): void {
 .review-form-label {
   font-size: 0.9rem;
   font-weight: 600;
-  color: #1a1a2e;
+  color: var(--color-navy-800);
 }
 
 .review-form-required {
-  color: #dc3545;
+  color: var(--color-rejected);
 }
 
 .review-form-input {
-  padding: 0.5rem 0.75rem;
-  border: 1px solid #d1d5db;
-  border-radius: 6px;
+  padding: 0.55rem 0.75rem;
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-sm);
   font-size: 0.9rem;
   font-family: inherit;
-  transition: border-color 0.2s;
+  color: var(--color-text-primary);
+  background-color: var(--color-surface);
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
 }
 
 .review-form-input:focus {
   outline: none;
-  border-color: #e94560;
-  box-shadow: 0 0 0 2px rgba(233, 69, 96, 0.15);
+  border-color: var(--color-blue-600);
+  box-shadow: 0 0 0 3px var(--color-blue-100);
 }
 
 .review-form-input--error {
-  border-color: #dc3545;
+  border-color: var(--color-rejected);
 }
 
 .review-form-hint {
   font-size: 0.8rem;
-  color: #6b7280;
+  color: var(--color-text-secondary);
 }
 
 .review-form-hint--error {
-  color: #dc3545;
+  color: var(--color-rejected);
 }
 
 .review-form-list-input {
@@ -422,16 +424,20 @@ function handleConfirm(): void {
 }
 
 .review-form-add-btn {
-  padding: 0.5rem 0.75rem;
-  background-color: #e94560;
-  color: #ffffff;
+  padding: 0.5rem 0.85rem;
+  background-color: var(--color-blue-600);
+  color: var(--color-text-inverse);
   border: none;
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   font-size: 1.1rem;
   font-weight: 700;
   cursor: pointer;
   line-height: 1;
-  transition: opacity 0.2s;
+  transition: background-color var(--transition-fast), opacity var(--transition-fast);
+}
+
+.review-form-add-btn:hover:not(:disabled) {
+  background-color: var(--color-blue-700);
 }
 
 .review-form-add-btn:disabled {
@@ -453,24 +459,24 @@ function handleConfirm(): void {
   align-items: center;
   gap: 0.35rem;
   padding: 0.3rem 0.6rem;
-  background-color: #eef2f7;
-  border-radius: 4px;
+  background-color: var(--color-blue-100);
+  border-radius: 999px;
   font-size: 0.85rem;
-  color: #1a1a2e;
+  color: var(--color-navy-800);
 }
 
 .review-form-tag-remove {
   background: none;
   border: none;
   font-size: 1rem;
-  color: #6b7280;
+  color: var(--color-text-secondary);
   cursor: pointer;
   padding: 0 0.15rem;
   line-height: 1;
 }
 
 .review-form-tag-remove:hover {
-  color: #dc3545;
+  color: var(--color-blue-700);
 }
 
 .review-form-actions {
@@ -480,19 +486,21 @@ function handleConfirm(): void {
 }
 
 .review-form-confirm {
-  padding: 0.6rem 1.5rem;
-  background-color: #16813d;
-  color: #ffffff;
+  min-height: 44px;
+  padding: 0.6rem 1.75rem;
+  background-color: var(--color-blue-600);
+  color: var(--color-text-inverse);
   border: none;
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
+  font-family: inherit;
   font-size: 0.9rem;
   font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.2s, opacity 0.2s;
+  transition: background-color var(--transition-fast), opacity var(--transition-fast);
 }
 
 .review-form-confirm:hover:not(:disabled) {
-  background-color: #126e33;
+  background-color: var(--color-blue-700);
 }
 
 .review-form-confirm:disabled {
