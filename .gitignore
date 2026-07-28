@@ -39,3 +39,10 @@ desktop.ini
 *.log
 *.tmp
 *.temp
+
+# Node.js dependencies anywhere in the repository
+node_modules/
+
+# Local Amazon Bedrock diagnostic files
+bedrock-test.json
+bedrock-response*.json
